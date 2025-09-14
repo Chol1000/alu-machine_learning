@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+"""
 ontains a func matrix_shape(matrix) that returns the shape of a matrix
 """
 
