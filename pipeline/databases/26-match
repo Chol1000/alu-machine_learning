@@ -1,2 +1,2 @@
-// count documents
-db.school.count()
+// find match
+db.school.find({ name: "Holberton school" })
