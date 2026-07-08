@@ -1,29 +1,32 @@
 #!/usr/bin/env python3
-
-"""
-This module contains a function that
-calculates total intra-cluster variance for a dataset
-"""
+"""Total intra-cluster variance for K-means."""
 
 import numpy as np
 
 
 def variance(X, C):
     """
-    calculates intra-cluster variance for a dataset
+    Calculate total intra-cluster variance for a dataset.
 
-    X: numpy.ndarray (n, d) containing the dataset that
-    will be used for K-means clustering
-        - n no. of data points
-        - d no. of dimensions for each data point
-    C: numpy.ndarray (k, d) containing the centroid
-        for each cluster
+    Each point is assigned to its nearest centroid in C; variance is the
+    sum of squared Euclidean distances to those centroids.
 
-    return:
-        - var: total intra-cluster variance
+    Args:
+        X: Data set of shape (n, d).
+        C: Centroid means of shape (k, d).
+
+    Returns:
+        Total variance as a float, or None on failure.
     """
-    var = np.sum((X - C[:, np.newaxis])**2, axis=-1)
-    mean = np.sqrt(var)
-    mini = np.min(mean, axis=0)
-    var = np.sum(mini ** 2)
-    return np.sum(var)
+    if not isinstance(X, np.ndarray) or not isinstance(C, np.ndarray):
+        return None
+    if len(X.shape) != 2 or len(C.shape) != 2:
+        return None
+    if X.shape[0] == 0 or C.shape[0] == 0:
+        return None
+    if X.shape[1] != C.shape[1]:
+        return None
+
+    dists = np.sum((X[:, np.newaxis, :] - C[np.newaxis, :, :]) ** 2, axis=2)
+    clss = np.argmin(dists, axis=1)
+    return np.sum(dists[np.arange(X.shape[0]), clss])
